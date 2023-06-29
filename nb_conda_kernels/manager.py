@@ -66,6 +66,7 @@ class CondaKernelSpecManager(KernelSpecManager):
         '{conda_kernel}' = Dynamically built kernel name for conda environment
         '{display_name}' = Kernel displayed name (as defined in the kernel spec)
         '{environment}'  = Environment name (identical to '{1}')
+        '{short_environment}' = Shortened environment name
         '{kernel}' = Original kernel name (name of the folder containing the kernel spec)
         '{language}'  = Language (identical to '{0}')
         """
@@ -233,6 +234,8 @@ class CondaKernelSpecManager(KernelSpecManager):
                 # Replace invalid characters with dashes
                 kernel_name = self.clean_kernel_name(kernel_name)
 
+                short_env_name = env_name[env_name.find('-')+1:]
+
                 display_prefix = spec['display_name']
                 if display_prefix.startswith('Python'):
                     display_prefix = 'Python'
@@ -242,6 +245,7 @@ class CondaKernelSpecManager(KernelSpecManager):
                     conda_kernel=kernel_name,
                     display_name=spec['display_name'],
                     environment=env_name,
+                    short_environment=short_env_name,
                     kernel=raw_kernel_name,
                     language=display_prefix,
                 )
