@@ -29,7 +29,13 @@ def exec_in_env(conda_prefix, env_path, *command):
             os.execvp(quoted_command[0], quoted_command)
         else:
             activate = os.path.join(conda_prefix, 'bin', 'activate')
+            global_act_file = os.path.join(os.path.dirname(os.path.dirname(env_path)), 'global-activate.sh')
+            global_act = f"source {global_act_file}" if os.path.exists(global_act_file) else None
+
             ecomm = ". '{}' '{}' && echo CONDA_PREFIX=$CONDA_PREFIX && exec {}".format(activate, env_path, ' '.join(quoted_command))
+            if global_act:
+                ecomm = f"{global_act} && {ecomm}"
+
             ecomm = ['sh' if 'bsd' in sys.platform else 'bash', '-c', ecomm]
             os.execvp(ecomm[0], ecomm)
 
